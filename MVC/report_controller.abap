@@ -1,0 +1,50 @@
+*&---------------------------------------------------------------------*
+*&  Include           ZTR_AI_TESTES_CONTROLLER
+*&---------------------------------------------------------------------*
+
+CLASS REPORT_CONTROLLER DEFINITION.
+
+  PUBLIC SECTION.
+
+  "O controller precisa enxergar a view, pois o initialization é um controller de tela.
+  DATA: VIEW TYPE REF TO REPORT_VIEW,
+        MODEL TYPE REF TO REPORT_MODEL.
+
+  METHODS:CONSTRUCTOR,
+          INITIALIZATION,
+          SELECTION_SCREEN_O,
+          SELECTION_SCREEN,
+          START_OF_SELECTION,
+          END_OF_SELECTION.
+
+ENDCLASS.
+
+CLASS REPORT_CONTROLLER IMPLEMENTATION.
+
+  METHOD CONSTRUCTOR.
+    CREATE OBJECT VIEW.
+    CREATE OBJECT MODEL.
+  ENDMETHOD.
+
+
+  METHOD INITIALIZATION.
+   ME->VIEW->INITIALIZATION( ).
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN_O.
+   ME->VIEW->SELECTION_SCREEN_O( ).
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN.
+   ME->VIEW->SELECTION_SCREEN( ).
+  ENDMETHOD.
+
+  METHOD START_OF_SELECTION.
+   ME->MODEL->START_OF_SELECTION( ).
+  ENDMETHOD.
+
+  METHOD END_OF_SELECTION.
+    ME->VIEW->END_OF_SELECTION( ).
+  ENDMETHOD.
+
+ENDCLASS.
