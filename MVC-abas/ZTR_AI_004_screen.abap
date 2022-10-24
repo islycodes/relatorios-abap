@@ -1,0 +1,37 @@
+TABLES: ZTRT_AI_001.
+
+*--------------------------------------------------------------------*
+**Colocando os filtros na tela de seleção:
+
+SELECTION-SCREEN BEGIN OF SCREEN 110 AS SUBSCREEN. "A Subscreen(ABA) só pode ser acessada se estiver dentro de uma screen.
+SELECTION-SCREEN BEGIN OF BLOCK B1 WITH FRAME TITLE TEXT-001.
+
+SELECT-OPTIONS: FIL_NUM FOR ZTRT_AI_001-NUMERO_PEDIDO,
+                FIL_DATA FOR ZTRT_AI_001-DATA_PEDIDO.
+
+SELECTION-SCREEN END OF BLOCK B1.
+SELECTION-SCREEN END OF SCREEN 110.
+
+
+*--------------------------------------------------------------------*
+**Aba de Modificação:
+
+SELECTION-SCREEN BEGIN OF SCREEN 120 AS SUBSCREEN.
+SELECTION-SCREEN BEGIN OF BLOCK B2 WITH FRAME TITLE TEXT-001.
+
+PARAMETERS: MOD_NUM TYPE ZTRT_AI_001-NUMERO_PEDIDO,
+                MOD_DATA TYPE ZTRT_AI_001-DATA_PEDIDO,
+                MOD_CANC AS CHECKBOX DEFAULT ''. " '' é para o checkbox iniciar desmarcado.
+
+SELECTION-SCREEN END OF BLOCK B2.
+SELECTION-SCREEN PUSHBUTTON 1(15) MOD_BTN USER-COMMAND MODIFY. "Pushbutton cria um botão.
+SELECTION-SCREEN END OF SCREEN 120.
+
+*--------------------------------------------------------------------*
+**Controlador de abas:
+SELECTION-SCREEN BEGIN OF TABBED BLOCK TAB_SCREEN FOR 8 LINES.
+
+  SELECTION-SCREEN TAB (20) FILTRO USER-COMMAND FIL_EVENT DEFAULT SCREEN 110. "Acessando a Subscreen 110
+  SELECTION-SCREEN TAB (20) MODIFY USER-COMMAND MOD_EVENT DEFAULT SCREEN 120. "Acessando a Subscreen 120
+
+SELECTION-SCREEN END OF BLOCK TAB_SCREEN.
