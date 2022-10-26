@@ -1,0 +1,111 @@
+*&---------------------------------------------------------------------*
+*&  VIEW
+*&---------------------------------------------------------------------*
+
+CLASS REPORT_VIEW DEFINITION.
+
+  PUBLIC SECTION.
+
+    DATA:SALV_ALV      TYPE REF TO CL_SALV_TABLE,
+         ALV_COLUMNS   TYPE REF TO CL_SALV_COLUMNS_TABLE,
+         R_DOUBLECLICK TYPE REF TO   CL_SALV_EVENTS_TABLE.
+
+    METHODS: INITIALIZATION,
+      SELECTION_SCREEN_0,
+      SELECTION_SCREEN IMPORTING MODEL TYPE REF TO REPORT_MODEL,
+      END_OF_SELECTION IMPORTING MODEL TYPE REF TO REPORT_MODEL,
+      CL_SALV_ALV      IMPORTING MODEL TYPE REF TO REPORT_MODEL,
+      SET_TOOLBAR,
+      SET_FIELDCATALOG,
+      SET_TEXT IMPORTING
+                 NAME    TYPE LVC_FNAME
+                 SHORT   TYPE SCRTEXT_S
+                 LONG    TYPE SCRTEXT_L
+                 COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE.
+
+ENDCLASS.
+
+
+CLASS REPORT_VIEW IMPLEMENTATION.
+
+  METHOD INITIALIZATION.
+
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN_0.
+
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN.
+
+  ENDMETHOD.
+
+  METHOD END_OF_SELECTION.
+    ME->CL_SALV_ALV( MODEL ).
+  ENDMETHOD.
+
+  METHOD CL_SALV_ALV.
+    CL_SALV_TABLE=>FACTORY(
+      IMPORTING R_SALV_TABLE = SALV_ALV
+      CHANGING  T_TABLE      = MODEL->LT_VBAK
+    ).
+
+    CALL METHOD SALV_ALV->GET_COLUMNS
+      RECEIVING
+        VALUE = ALV_COLUMNS.
+
+    CALL METHOD ALV_COLUMNS->SET_COLOR_COLUMN
+      EXPORTING
+        VALUE = 'COLOR'.
+
+    MODEL->SET_COLOR( ).
+
+
+    R_DOUBLECLICK = SALV_ALV->GET_EVENT( ).
+    SET HANDLER MODEL->DOUBLE_CLICK FOR R_DOUBLECLICK.
+
+    ME->SET_TOOLBAR( ).
+    ME->SET_FIELDCATALOG( ).
+
+    SALV_ALV->DISPLAY( ).
+  ENDMETHOD.
+
+  METHOD SET_TOOLBAR.
+    DATA: FUNCTIONS     TYPE REF TO CL_SALV_FUNCTIONS_LIST.
+
+    FUNCTIONS = SALV_ALV->GET_FUNCTIONS( ).
+    FUNCTIONS->SET_ALL( ).
+  ENDMETHOD.
+
+  METHOD SET_FIELDCATALOG.
+
+    DATA: COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE, "Essa classe do SAP é responsável por receber todos os parametros de coluna do ALV.
+          COLUMN  TYPE REF TO CL_SALV_COLUMN.
+
+    COLUMNS = SALV_ALV->GET_COLUMNS( ). "Manipula todas as colunas
+
+    COLUMNS->SET_OPTIMIZE( ABAP_TRUE ). "Alinha a coluna automaticamente
+
+    COLUMN = COLUMNS->GET_COLUMN( 'ERDAT' )."Manipula uma coluna especifica
+    COLUMN->SET_VISIBLE( ABAP_FALSE ). "Esconde a coluna erdat
+
+    ME->SET_TEXT( EXPORTING NAME = 'MES'
+                          SHORT = 'Mês'
+                          LONG = 'Mês'
+                          COLUMNS = COLUMNS ).
+
+    ME->SET_TEXT( EXPORTING NAME = 'ANO'
+                          SHORT = 'Ano'
+                          LONG = 'Ano'
+                          COLUMNS = COLUMNS ).
+  ENDMETHOD.
+
+
+  METHOD SET_TEXT.
+    DATA: COLUMN TYPE REF TO CL_SALV_COLUMN.
+
+    COLUMN = COLUMNS->GET_COLUMN( NAME ).
+    COLUMN->SET_SHORT_TEXT( SHORT ).
+    COLUMN->SET_LONG_TEXT( LONG ).
+  ENDMETHOD.
+ENDCLASS.
