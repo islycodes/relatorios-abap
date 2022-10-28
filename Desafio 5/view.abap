@@ -1,0 +1,184 @@
+*&---------------------------------------------------------------------*
+*&  VIEW
+*&---------------------------------------------------------------------*
+
+CLASS REPORT_VIEW DEFINITION.
+
+  PUBLIC SECTION.
+
+    DATA:SALV_ALV      TYPE REF TO CL_SALV_TABLE.
+
+    METHODS: INITIALIZATION,
+      SELECTION_SCREEN_0,
+      SELECTION_SCREEN,
+      END_OF_SELECTION,
+      EXIBE_ALV,
+      EXIBE_ALV_POP,
+      SET_FIELDCAT,
+      SET_FIELDCAT_POP,
+      SET_TOOLBAR,
+      SET_EVENTS,
+      SET_ICON_TABLE,
+      ON_DOUBLE_CLICK FOR EVENT DOUBLE_CLICK OF CL_SALV_EVENTS_TABLE IMPORTING ROW COLUMN,
+      SET_TEXT IMPORTING
+             NAME       TYPE LVC_FNAME
+             SHORT      TYPE SCRTEXT_S
+             LONG       TYPE SCRTEXT_L
+             COLUMNS    TYPE REF TO CL_SALV_COLUMNS_TABLE.
+
+
+ENDCLASS.
+
+
+CLASS REPORT_VIEW IMPLEMENTATION.
+
+  METHOD INITIALIZATION.
+
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN_0.
+
+  ENDMETHOD.
+
+  METHOD SELECTION_SCREEN.
+
+  ENDMETHOD.
+
+  METHOD END_OF_SELECTION.
+    ME->SET_ICON_TABLE( ).
+    ME->EXIBE_ALV( ).
+  ENDMETHOD.
+
+  METHOD SET_TOOLBAR.
+    DATA: FUNCTIONS     TYPE REF TO CL_SALV_FUNCTIONS_LIST.
+
+    FUNCTIONS = SALV_ALV->GET_FUNCTIONS( ).
+    FUNCTIONS->SET_ALL( ).
+  ENDMETHOD.
+
+  METHOD SET_EVENTS.
+
+    DATA(EVENTS) = SALV_ALV->GET_EVENT( ).
+    SET HANDLER ME->ON_DOUBLE_CLICK FOR EVENTS.
+
+  ENDMETHOD.
+
+*--------------------------------------------------------------------*
+**Método que exibe a tabela do relatório.
+*--------------------------------------------------------------------*
+
+  METHOD EXIBE_ALV.
+    CL_SALV_TABLE=>FACTORY(
+      IMPORTING R_SALV_TABLE = SALV_ALV
+      CHANGING  T_TABLE      = TABLE
+    ).
+
+    ME->SET_TOOLBAR( ).
+    ME->SET_EVENTS( ).
+    ME->SET_FIELDCAT( ).
+    SALV_ALV->DISPLAY( ).
+  ENDMETHOD.
+
+
+  METHOD EXIBE_ALV_POP.
+    CL_SALV_TABLE=>FACTORY(
+      IMPORTING R_SALV_TABLE = SALV_ALV
+      CHANGING  T_TABLE      = TABLE_POP
+    ).
+
+    ME->SET_TOOLBAR( ).
+    ME->SET_FIELDCAT_POP( ).
+  ENDMETHOD.
+
+
+*-------------------------------------------------------------------*
+
+  METHOD SET_TEXT.
+
+    DATA: COLUMN TYPE REF TO CL_SALV_COLUMN.
+
+    COLUMN = COLUMNS->GET_COLUMN( NAME ).
+    COLUMN->SET_VISIBLE( ABAP_TRUE ).
+    COLUMN->SET_SHORT_TEXT( SHORT ).
+    COLUMN->SET_LONG_TEXT( LONG ).
+
+  ENDMETHOD.
+
+
+  METHOD SET_FIELDCAT.
+
+    DATA:COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE,
+         COLUMN  TYPE REF TO CL_SALV_COLUMN_TABLE.
+
+    COLUMNS = SALV_ALV->GET_COLUMNS( ).
+    COLUMNS->SET_COLOR_COLUMN( 'COLOR' ).
+
+    COLUMNS->SET_OPTIMIZE( ABAP_TRUE ).
+
+    ME->SET_TEXT( EXPORTING NAME = 'REGION'    SHORT = 'Região'          LONG = 'REGIÃO'      COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'BEZEI'     SHORT = 'Estado'          LONG = 'ESTADO'      COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'CITY1'     SHORT = 'Cidade'          LONG = 'CIDADE'      COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'BRGEW'     SHORT = 'Quantidade'      LONG = 'QUANTIDADE'  COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'NETWR'     SHORT = 'Valor'           LONG = 'VALOR'       COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'ICONE'     SHORT = 'Icone'           LONG = 'ICONE'       COLUMNS = COLUMNS ).
+
+
+  ENDMETHOD.
+
+
+
+  METHOD SET_FIELDCAT_POP.
+
+    DATA:COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE,
+         COLUMN  TYPE REF TO CL_SALV_COLUMN_TABLE.
+
+    COLUMNS = SALV_ALV->GET_COLUMNS( ).
+
+    COLUMNS->SET_OPTIMIZE( ABAP_TRUE ).
+
+    ME->SET_TEXT( EXPORTING NAME = 'TKNUM'      SHORT = 'Transporte'  LONG = 'TRANSPORTE'  COLUMNS = COLUMNS ).
+    ME->SET_TEXT( EXPORTING NAME = 'BRGEW'      SHORT = 'Quantidade'  LONG = 'QUANTIDADE'  COLUMNS = COLUMNS ).
+
+  ENDMETHOD.
+
+
+ METHOD SET_ICON_TABLE.
+    FIELD-SYMBOLS: <ICON_TABLE> TYPE TYP_RLTR.
+    DATA: LS_COLOR             TYPE LVC_S_SCOL.
+
+    LOOP AT TABLE ASSIGNING <ICON_TABLE>.
+      IF <ICON_TABLE>-BRGEW > 1000.
+      <ICON_TABLE>-ICONE = STRUCT-ICONE = '@01@'.
+      ELSE.
+      <ICON_TABLE>-ICONE = STRUCT-ICONE = '@02@'.
+      ENDIF.
+
+    ENDLOOP.
+  ENDMETHOD.
+
+
+*--------------------------------------------------------------------*
+**Método que exibe a tabela em pop-up a partir de um double click.
+*--------------------------------------------------------------------*
+
+  METHOD ON_DOUBLE_CLICK.
+
+  ME->EXIBE_ALV_POP( ).
+  ME->SET_EVENTS( ).
+
+    IF COLUMN = 'BRGEW'.
+    IF SALV_ALV IS BOUND.
+      SALV_ALV->SET_SCREEN_POPUP(
+      START_COLUMN = 20
+      END_COLUMN   = 100
+      START_LINE   = 6
+      END_LINE     = 70
+      ).
+    ENDIF.
+
+    SALV_ALV->DISPLAY( ).
+   ENDIF.
+
+  ENDMETHOD.
+
+ENDCLASS.
