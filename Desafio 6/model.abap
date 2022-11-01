@@ -1,0 +1,242 @@
+*--------------------------------------------------------------------*
+**Model
+*--------------------------------------------------------------------*
+
+CLASS YAI_MODEL DEFINITION.
+
+  PUBLIC SECTION.
+
+    METHODS: START_OF_SELECTION,
+      SELECIONA_DADOS,
+      TRATA_DADOS,
+      GET_ERROR.
+
+ENDCLASS.
+
+CLASS YAI_MODEL IMPLEMENTATION.
+
+  METHOD START_OF_SELECTION.
+    ME->SELECIONA_DADOS( ).
+    ME->TRATA_DADOS( ).
+  ENDMETHOD.
+
+
+*--------------------------------------------------------------------*
+**Seleciona o conteúdo das tabelas
+*--------------------------------------------------------------------*
+
+  METHOD SELECIONA_DADOS.
+    SELECT KUNNR
+           NAME1
+    INTO TABLE TI_KNA1
+    FROM KNA1
+    WHERE KUNNR IN S_KUNNR.
+
+    IF SY-SUBRC = '0'.
+
+      SELECT COMP_CODE
+             CAJO_NUMBER
+             FISC_YEAR
+             POSTING_NUMBER
+             POSITION_NUMBER
+             TRANSACT_NUMBER
+             TRANSACT_TYPE
+             POSTING_DATE
+             GL_ACCOUNT
+             POSITION_TEXT
+             CUSTOMER
+             BZDAT
+             ALLOC_NMBR
+      INTO TABLE TI_TCJ_POSITIONS
+      FROM TCJ_POSITIONS
+      WHERE COMP_CODE     = P_BUKRS
+      AND  BZDAT         IN S_BZDAT
+      AND  POSTING_DATE  IN S_POSTG
+      AND  CUSTOMER      IN S_KUNNR.
+
+      IF SY-SUBRC = '0'.
+
+        LOOP AT TI_TCJ_POSITIONS INTO WA_TCJ_POSITIONS.
+          CONDENSE WA_TCJ_POSITIONS-TRANSACT_NUMBER.
+          IF WA_TCJ_POSITIONS-TRANSACT_NUMBER = '2'.
+            MOVE-CORRESPONDING WA_TCJ_POSITIONS TO WA_TCJ_POSITIONS_AUX.
+            APPEND WA_TCJ_POSITIONS_AUX TO TI_TCJ_POSITIONS_AUX.
+          ENDIF.
+        ENDLOOP.
+
+        CLEAR: TI_TCJ_POSITIONS, WA_TCJ_POSITIONS.
+
+
+        SELECT *
+        INTO TABLE TI_TCJ_CJ_NAMES
+        FROM TCJ_CJ_NAMES
+        FOR ALL ENTRIES IN TI_TCJ_POSITIONS_AUX
+        WHERE COMP_CODE = TI_TCJ_POSITIONS_AUX-COMP_CODE
+        AND CAJO_NUMBER = TI_TCJ_POSITIONS_AUX-CAJO_NUMBER
+        AND LANGU = 'PT'.
+
+        IF SY-SUBRC = '0'.
+
+          SELECT COMP_CODE
+                 CAJO_NUMBER
+                 FISC_YEAR
+                 POSTING_NUMBER
+                 H_RECEIPTS
+                 H_PAYMENTS
+                 H_NET_AMOUNT
+                 H_NET_PAYMENT_WT
+                 H_TAX_AMOUNT
+                 DOCUMENT_DATE
+                 DOCUMENT_NUMBER
+                 POSTING_DATE
+                 CHECK_NUMBER
+                 CHECK_ISSUER
+                 BANK_KEY
+                 BANK_ACCT
+                 CHECK_FY
+                 VALUTA_DATE
+          INTO TABLE TI_TCJ_DOCUMENTS
+          FROM TCJ_DOCUMENTS
+          FOR ALL ENTRIES IN TI_TCJ_POSITIONS_AUX
+          WHERE  COMP_CODE       = TI_TCJ_POSITIONS_AUX-COMP_CODE
+          AND    CAJO_NUMBER     = TI_TCJ_POSITIONS_AUX-CAJO_NUMBER
+          AND    FISC_YEAR       = TI_TCJ_POSITIONS_AUX-FISC_YEAR
+          AND    POSTING_NUMBER  = TI_TCJ_POSITIONS_AUX-POSTING_NUMBER
+          AND    REVBELNR        = SPACE.
+
+
+          IF SY-SUBRC <> '0'.
+            ME->GET_ERROR( ).
+          ENDIF.
+
+        ENDIF.
+
+      ELSE.
+        ME->GET_ERROR( )..
+      ENDIF.
+
+    ELSE.
+      ME->GET_ERROR( )..
+    ENDIF.
+  ENDMETHOD.
+
+
+  METHOD TRATA_DADOS.
+
+    SORT:
+      TI_KNA1               BY KUNNR,
+      TI_TCJ_CJ_NAMES       BY COMP_CODE CAJO_NUMBER CAJO_NAME,
+      TI_TCJ_DOCUMENTS      BY COMP_CODE CAJO_NUMBER FISC_YEAR POSTING_NUMBER,
+      TI_TCJ_POSITIONS_AUX  BY COMP_CODE CAJO_NUMBER FISC_YEAR POSTING_NUMBER.
+
+    REFRESH:  TI_SAIDA.
+    CLEAR:    WA_SAIDA.
+
+    LOOP AT TI_TCJ_DOCUMENTS INTO WA_TCJ_DOCUMENTS.
+
+      ADD 1 TO V_COUNTZ.
+
+      MOVE-CORRESPONDING WA_TCJ_DOCUMENTS TO WA_SAIDA.
+      WA_SAIDA-CJAMOUNT = WA_TCJ_DOCUMENTS-H_RECEIPTS.
+
+      READ TABLE TI_TCJ_POSITIONS_AUX INTO WA_TCJ_POSITIONS_AUX WITH KEY COMP_CODE     = WA_TCJ_DOCUMENTS-COMP_CODE
+                                                                        CAJO_NUMBER    = WA_TCJ_DOCUMENTS-CAJO_NUMBER
+                                                                        FISC_YEAR      = WA_TCJ_DOCUMENTS-FISC_YEAR
+                                                                        POSTING_NUMBER = WA_TCJ_DOCUMENTS-POSTING_NUMBER BINARY SEARCH.
+      IF SY-SUBRC = 0.
+        WA_SAIDA-KUNNR          = WA_TCJ_POSITIONS_AUX-CUSTOMER.
+        WA_SAIDA-ALLOC_NMBR     = WA_TCJ_POSITIONS_AUX-ALLOC_NMBR.
+        WA_SAIDA-POSITION_TEXT  = WA_TCJ_POSITIONS_AUX-POSITION_TEXT.
+        WA_SAIDA-BZDAT          = WA_TCJ_POSITIONS_AUX-BZDAT.
+      ENDIF.
+
+      READ TABLE TI_KNA1 INTO WA_KNA1 WITH KEY KUNNR = WA_TCJ_POSITIONS_AUX-CUSTOMER BINARY SEARCH.
+      IF SY-SUBRC = 0.
+        WA_SAIDA-NAME1 = WA_KNA1-NAME1.
+      ENDIF.
+
+      READ TABLE TI_TCJ_CJ_NAMES INTO WA_TCJ_CJ_NAMES WITH KEY COMP_CODE      = WA_TCJ_DOCUMENTS-COMP_CODE
+                                                               CAJO_NUMBER    = WA_TCJ_DOCUMENTS-CAJO_NUMBER
+                                                               LANGU          = 'P' BINARY SEARCH.
+      IF SY-SUBRC = 0.
+        WA_SAIDA-CAJO_NAME = WA_TCJ_CJ_NAMES-CAJO_NAME.
+      ENDIF.
+
+      WA_SAIDA-DOCUMENT_NUMBER = WA_TCJ_DOCUMENTS-POSTING_NUMBER.
+
+      "Solicitação do Rafael
+      IF WA_SAIDA-DOCUMENT_DATE BETWEEN '20120701' AND '20131231'.
+        WA_SAIDA-STATUS_FB50 = 'OK'.
+      ENDIF.
+
+      IF P_TODOS EQ 'X'.
+
+        SELECT SINGLE * FROM ZFIT004
+        INTO W_ZFIT004
+        WHERE DOCUMENT_NUMBER = WA_SAIDA-DOCUMENT_NUMBER AND
+              CHECK_NUMBER = WA_SAIDA-CHECK_NUMBER.
+
+        IF SY-SUBRC IS INITIAL.
+
+          WA_SAIDA-STATUS_FB50 = 'OK'.
+          WA_SAIDA-N_DOC_CRIADO = W_ZFIT004-CHECK_NUMBER.
+          WA_SAIDA-CONTA_CRE = W_ZFIT004-CONTA_CRED.
+          WA_SAIDA-CONTA_DEB = W_ZFIT004-CONTA_DEB.
+
+        ELSE.
+          WA_SAIDA-CONTA_CRE = '0011101998'.
+        ENDIF.
+
+        APPEND WA_SAIDA TO TI_SAIDA.
+        CLEAR: WA_SAIDA, W_ZFIT004.
+
+      ELSEIF P_COMPE EQ 'X'.
+
+        SELECT SINGLE * FROM ZFIT004
+        INTO W_ZFIT004
+        WHERE DOCUMENT_NUMBER = WA_SAIDA-DOCUMENT_NUMBER AND
+              CHECK_NUMBER = WA_SAIDA-CHECK_NUMBER.
+
+        IF SY-SUBRC IS INITIAL.
+
+          WA_SAIDA-STATUS_FB50 = 'OK'.
+          WA_SAIDA-N_DOC_CRIADO = W_ZFIT004-CHECK_NUMBER.
+          WA_SAIDA-CONTA_CRE = W_ZFIT004-CONTA_CRED.
+          WA_SAIDA-CONTA_DEB = W_ZFIT004-CONTA_DEB.
+          APPEND WA_SAIDA TO TI_SAIDA.
+          CLEAR: WA_SAIDA, W_ZFIT004.
+        ENDIF.
+
+      ELSEIF P_ABERT EQ 'X'.
+
+        SELECT SINGLE * FROM ZFIT004
+        INTO W_ZFIT004
+        WHERE DOCUMENT_NUMBER = WA_SAIDA-DOCUMENT_NUMBER AND
+            CHECK_NUMBER = WA_SAIDA-CHECK_NUMBER.
+
+        IF ( SY-SUBRC IS NOT INITIAL ) AND NOT
+          ( WA_SAIDA-DOCUMENT_DATE BETWEEN '20120701' AND '20131231').
+
+          WA_SAIDA-CONTA_CRE = '0011101998'.
+          APPEND WA_SAIDA TO TI_SAIDA.
+          CLEAR: WA_SAIDA, W_ZFIT004.
+        ENDIF.
+
+      ENDIF.
+
+    ENDLOOP.
+
+    MOVE V_COUNTZ TO V_COUNTC.
+    CONDENSE V_COUNTC.
+
+  ENDMETHOD.
+
+
+  METHOD GET_ERROR.
+
+    MESSAGE S000(00) WITH TEXT-002 DISPLAY LIKE 'E'.
+*  STOP.
+
+  ENDMETHOD.
+
+ENDCLASS.
