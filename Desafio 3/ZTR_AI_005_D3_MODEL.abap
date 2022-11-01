@@ -90,7 +90,6 @@ CLASS REPORT_MODEL IMPLEMENTATION.
 
 
     LOOP AT LT_VBAK ASSIGNING <COL_TABLE>.
-      " Se a quantidade (kg) for menor que 1000.
       " informa o campo que tem que ser colorido
       LS_COLOR-FNAME     = 'BRGEW'.          "<<Specify the column name
       " informa a cor para a estrutura.
