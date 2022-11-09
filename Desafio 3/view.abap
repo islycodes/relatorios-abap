@@ -79,7 +79,7 @@ CLASS REPORT_VIEW IMPLEMENTATION.
 
   METHOD SET_FIELDCATALOG.
 
-    DATA: COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE, "Essa classe do SAP é responsável por receber todos os parametros de coluna do ALV.
+    DATA: COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE, "Essa classe do SAP Ã© responsÃ¡vel por receber todos os parametros de coluna do ALV.
           COLUMN  TYPE REF TO CL_SALV_COLUMN.
 
     COLUMNS = SALV_ALV->GET_COLUMNS( ). "Manipula todas as colunas
@@ -90,8 +90,8 @@ CLASS REPORT_VIEW IMPLEMENTATION.
     COLUMN->SET_VISIBLE( ABAP_FALSE ). "Esconde a coluna erdat
 
     ME->SET_TEXT( EXPORTING NAME = 'MES'
-                          SHORT = 'Mês'
-                          LONG = 'Mês'
+                          SHORT = 'MÃªs'
+                          LONG = 'MÃªs'
                           COLUMNS = COLUMNS ).
 
     ME->SET_TEXT( EXPORTING NAME = 'ANO'
