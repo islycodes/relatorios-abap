@@ -3,7 +3,7 @@
 *&---------------------------------------------------------------------*
 
 
-"Types - tela do relatÛrio:
+"Types - tela do relat√≥rio:
 TYPES: BEGIN OF TYP_VBAK,
          MATNR TYPE VBAP-MATNR, "Produto
          MAKTX TYPE MAKT-MAKTX, "Descr. produto
@@ -65,7 +65,7 @@ CLASS REPORT_MODEL IMPLEMENTATION.
   ENDMETHOD.
 
 
-*    "----Relacionamento de dados (tabela de cores)-----------------------------InÌcio"
+*    "----Relacionamento de dados (tabela de cores)-----------------------------In√≠cio"
 *    "  Categoria de tabela |  Estrutura   |   Campos  |  Tipo Componente
 *    "       LVC_T_SCOL -----> LVC_S_SCOL ---> FNAME -----> LVC_FNAME
 *    "                                        NOKEYCOL ---> LVC_NOKEYC      Campos estruc
@@ -75,16 +75,16 @@ CLASS REPORT_MODEL IMPLEMENTATION.
 *    "----Relacionamento de dados (tabela de cores)--------------------------------Fim"
 
 **      * 1 - Azul
-**      * 2 - Lay-out padr„o
+**      * 2 - Lay-out padr√£o
 **      * 3 - Amarelo
 **      * 4 - Verde escuro
 **      * 5 - Verde claro
 **      * 6 - Vermelho
-**      * 7 - Lil·s
+**      * 7 - Lil√°s
 
   METHOD SET_COLOR.
 *    "  Aqui eu estarei dando o loop na tabela principal para tratar registro
-*    " por registro com as condiÁıes pra que n„o sejam pintadas todas as celulas.
+*    " por registro com as condi√ß√µes pra que n√£o sejam pintadas todas as celulas.
     FIELD-SYMBOLS: <COL_TABLE> TYPE TYP_VBAK.
     DATA: LS_COLOR               TYPE LVC_S_SCOL.
 
