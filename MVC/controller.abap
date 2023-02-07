@@ -6,7 +6,7 @@ CLASS REPORT_CONTROLLER DEFINITION.
 
   PUBLIC SECTION.
 
-  "O controller precisa enxergar a view, pois o initialization é um controller de tela.
+  "O controller precisa enxergar a view, pois o initialization Ã© um controller de tela.
   DATA: VIEW TYPE REF TO REPORT_VIEW,
         MODEL TYPE REF TO REPORT_MODEL.
 
