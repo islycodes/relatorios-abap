@@ -1,9 +1,9 @@
 TABLES: ZTRT_AI_001.
 
 *--------------------------------------------------------------------*
-**Colocando os filtros na tela de seleÁ„o:
+**Colocando os filtros na tela de sele√ß√£o:
 
-SELECTION-SCREEN BEGIN OF SCREEN 110 AS SUBSCREEN. "A Subscreen(ABA) sÛ pode ser acessada se estiver dentro de uma screen.
+SELECTION-SCREEN BEGIN OF SCREEN 110 AS SUBSCREEN. "A Subscreen(ABA) s√≥ pode ser acessada se estiver dentro de uma screen.
 SELECTION-SCREEN BEGIN OF BLOCK B1 WITH FRAME TITLE TEXT-001.
 
 SELECT-OPTIONS: FIL_NUM FOR ZTRT_AI_001-NUMERO_PEDIDO,
@@ -14,17 +14,17 @@ SELECTION-SCREEN END OF SCREEN 110.
 
 
 *--------------------------------------------------------------------*
-**Aba de ModificaÁ„o:
+**Aba de Modifica√ß√£o:
 
 SELECTION-SCREEN BEGIN OF SCREEN 120 AS SUBSCREEN.
 SELECTION-SCREEN BEGIN OF BLOCK B2 WITH FRAME TITLE TEXT-001.
 
 PARAMETERS: MOD_NUM TYPE ZTRT_AI_001-NUMERO_PEDIDO,
                 MOD_DATA TYPE ZTRT_AI_001-DATA_PEDIDO,
-                MOD_CANC AS CHECKBOX DEFAULT ''. " '' È para o checkbox iniciar desmarcado.
+                MOD_CANC AS CHECKBOX DEFAULT ''. " '' √© para o checkbox iniciar desmarcado.
 
 SELECTION-SCREEN END OF BLOCK B2.
-SELECTION-SCREEN PUSHBUTTON 1(15) MOD_BTN USER-COMMAND MODIFY. "Pushbutton cria um bot„o.
+SELECTION-SCREEN PUSHBUTTON 1(15) MOD_BTN USER-COMMAND MODIFY. "Pushbutton cria um bot√£o.
 SELECTION-SCREEN END OF SCREEN 120.
 
 *--------------------------------------------------------------------*
