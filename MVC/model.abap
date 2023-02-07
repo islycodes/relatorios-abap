@@ -12,7 +12,7 @@ ENDCLASS.
 
 CLASS REPORT_MODEL IMPLEMENTATION.
 
-  "Inicia a Seleção, quando tiver filtros.
+  "Inicia a SeleÃ§Ã£o, quando tiver filtros.
   METHOD START_OF_SELECTION.
     MESSAGE 'Start of Selection Executado!' TYPE 'I'.
   ENDMETHOD.
