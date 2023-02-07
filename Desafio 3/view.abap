@@ -18,7 +18,7 @@ CLASS REPORT_VIEW DEFINITION.
       SET_TOOLBAR,
       SET_FIELDCATALOG,
       SET_TEXT IMPORTING
-                 NAME    TYPE LVC_FNAME
+                 NAME    TYPE LVC_FNAME 
                  SHORT   TYPE SCRTEXT_S
                  LONG    TYPE SCRTEXT_L
                  COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE.
