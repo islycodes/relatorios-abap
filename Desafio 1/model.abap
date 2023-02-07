@@ -2,7 +2,7 @@
 *&  Include           ZTR_AI_TESTES_MODEL
 *&---------------------------------------------------------------------*
 
-  "Types - tela do relatório:
+  "Types - tela do relatÃ³rio:
   TYPES: BEGIN OF TYP_VBAK,
            KUNNR TYPE KNA1-KUNNR,
            NAME1 TYPE KNA1-NAME1,
@@ -36,7 +36,7 @@
 
     METHOD GET_TABLE.
 
-*Tela de Seleção
+*Tela de SeleÃ§Ã£o
       SELECT K1~KUNNR "Cliente
              K1~NAME1
              VP~BRGEW
