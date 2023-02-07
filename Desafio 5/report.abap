@@ -1,7 +1,7 @@
 *-------------------------------------------------------------------------------------------------*
-**Desafio 4: Quando  der  um  duplo  clique  no  campo  de  “Produto”,  deverá exibir  uma  popup
-* com  os  campos  VTTK-TKNUM(Transporte) e VBAP-BRGEW(Quantidade) por transporte que compõem o
-* cálculo total dos valores.
+**Desafio 4: Quando  der  um  duplo  clique  no  campo  de  â€œProdutoâ€,  deverÃ¡ exibir  uma  popup
+* com  os  campos  VTTK-TKNUM(Transporte) e VBAP-BRGEW(Quantidade) por transporte que compÃµem o
+* cÃ¡lculo total dos valores.
 *-------------------------------------------------------------------------------------------------*
 
 REPORT ZTR_AI_005_D5.
@@ -14,10 +14,10 @@ INCLUDE ZTR_AI_005_D5_MODEL.
 INCLUDE ZTR_AI_005_D5_VIEW.
 INCLUDE ZTR_AI_005_D5_CONTROLLER.
 
-DATA: GC_CONTROLLER TYPE REF TO REPORT_CONTROLLER. "Variável Global Controller
+DATA: GC_CONTROLLER TYPE REF TO REPORT_CONTROLLER. "VariÃ¡vel Global Controller
 
 *--------------------------------------------------------------------*
-**Implementação dos Eventos
+**ImplementaÃ§Ã£o dos Eventos
 *--------------------------------------------------------------------*
 
 INITIALIZATION.
@@ -37,5 +37,5 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
   GC_CONTROLLER->START_OF_SELECTION( ).
 
-END-OF-SELECTION. "Exibição do ALV
+END-OF-SELECTION. "ExibiÃ§Ã£o do ALV
   GC_CONTROLLER->END_OF_SELECTION( ).
