@@ -1,16 +1,8 @@
 *-----------------------------------------------------------------------
-* Empresa..: Caçola
-* Programa.: ZFIR0003
-* Tipo.....: Programa Report
-* Módulo...: FI
-* Transação: ZFIR008
-* Descrição: Relatório de Cheques por Cliente
-* Autor....: Douglas Gomes   (Consultoria Avannt)
-* Data.....: 17/09/2012
 *
-*                          [HISTÓRICO]
+*                          [HISTÃ“RICO]
 * ========== ============  ==========  =================================
-*    Data        Autor      Request                Descrição
+*    Data        Autor      Request                DescriÃ§Ã£o
 * ========== ============  ==========  =================================
 *-----------------------------------------------------------------------
 
@@ -24,10 +16,10 @@ INCLUDE YAI_MODEL.
 INCLUDE YAI_VIEW.
 INCLUDE YAI_CONTROLLER.
 
-DATA: GC_CONTROLLER TYPE REF TO YAI_CONTROLLER. "Variável Global Controller
+DATA: GC_CONTROLLER TYPE REF TO YAI_CONTROLLER. "VariÃ¡vel Global Controller
 
 *--------------------------------------------------------------------*
-**Implementação dos Eventos
+**ImplementaÃ§Ã£o dos Eventos
 *--------------------------------------------------------------------*
 
 INITIALIZATION.
@@ -47,5 +39,5 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
   GC_CONTROLLER->START_OF_SELECTION( ).
 
-END-OF-SELECTION. "Exibição do ALV
+END-OF-SELECTION. "ExibiÃ§Ã£o do ALV
   GC_CONTROLLER->END_OF_SELECTION( ).
