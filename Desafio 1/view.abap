@@ -20,7 +20,7 @@ ENDCLASS.
 
 
 *--------------------------------------------------------------------*
-"Função de double click para exibir os detalhes do cliente selecionado
+"FunÃ§Ã£o de double click para exibir os detalhes do cliente selecionado
 
 
 
