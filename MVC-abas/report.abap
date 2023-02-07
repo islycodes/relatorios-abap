@@ -1,7 +1,7 @@
 REPORT ZTR_AI_004.
 
 **********************************************************************
-**Aula de relatórios MVC
+**Aula de relatÃ³rios MVC
 **********************************************************************
 
 "A ordem dos includes interfere nas chamadas
@@ -10,11 +10,11 @@ INCLUDE ZTR_AI_004_MODEL. "Selects
 INCLUDE ZTR_AI_004_VIEW. "Telas
 INCLUDE ZTR_AI_004_CONTROLLER. "Gerenciamento de eventos
 
-DATA: GC_CONTROLLER TYPE REF TO REPORT_CONTROLLER. "Variável Global Controller
+DATA: GC_CONTROLLER TYPE REF TO REPORT_CONTROLLER. "VariÃ¡vel Global Controller
                          "Referencia a classe do Include Controller
 
 *--------------------------------------------------------------------*
-**Implementação dos Eventos
+**ImplementaÃ§Ã£o dos Eventos
 *--------------------------------------------------------------------*
 
 INITIALIZATION.
@@ -31,5 +31,5 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
   GC_CONTROLLER->START_OF_SELECTION( ).
 
-END-OF-SELECTION. "Exibição do ALV
+END-OF-SELECTION. "ExibiÃ§Ã£o do ALV
  GC_CONTROLLER->END_OF_SELECTION( ).
