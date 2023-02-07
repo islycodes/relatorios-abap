@@ -24,11 +24,11 @@ CLASS REPORT_VIEW DEFINITION.
 ENDCLASS.
 
 CLASS REPORT_VIEW IMPLEMENTATION.
-  "Qualquer validação a ser feita na inicialização do programa deve ser feita aqui.
-  "Validações de usuários, permissões..
+  "Qualquer validaÃ§Ã£o a ser feita na inicializaÃ§Ã£o do programa deve ser feita aqui.
+  "ValidaÃ§Ãµes de usuÃ¡rios, permissÃµes..
   METHOD INITIALIZATION.
     FILTRO = '@4G@ Filtros'.
-    MODIFY = '@17@ Criação/Modificação'.
+    MODIFY = '@17@ CriaÃ§Ã£o/ModificaÃ§Ã£o'.
     MOD_BTN = '@2L@ Salvar'.
   ENDMETHOD.
 
@@ -37,7 +37,7 @@ CLASS REPORT_VIEW IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD SELECTION_SCREEN.
-    "Evento para modificação/inserção de dados na tabela.
+    "Evento para modificaÃ§Ã£o/inserÃ§Ã£o de dados na tabela.
     CASE SY-UCOMM.
     WHEN 'MODIFY'.
 
@@ -60,7 +60,7 @@ CLASS REPORT_VIEW IMPLEMENTATION.
       CHANGING T_TABLE      = MODEL->T_CAB_PEDIDO
     ).
 
-    "Chamada das funções
+    "Chamada das funÃ§Ãµes
     ME->SET_TOOLBAR( ).
 
     ME->SET_FIELDCATALOG( ).
@@ -71,17 +71,17 @@ CLASS REPORT_VIEW IMPLEMENTATION.
 
   METHOD SET_TOOLBAR.
 
-    "Adiciona opções de filtro
+    "Adiciona opÃ§Ãµes de filtro
     DATA: FUNCTIONS TYPE REF TO CL_SALV_FUNCTIONS_LIST.
     FUNCTIONS = SALV_ALV->GET_FUNCTIONS( ).
     FUNCTIONS->SET_ALL( ).
 
   ENDMETHOD.
 
-  "Metodo para esconder alguma coluna na exibição
+  "Metodo para esconder alguma coluna na exibiÃ§Ã£o
   METHOD SET_FIELDCATALOG.
 
-    DATA: COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE, "Essa classe do SAP é responsável por receber todos os parametros de coluna do ALV.
+    DATA: COLUMNS TYPE REF TO CL_SALV_COLUMNS_TABLE, "Essa classe do SAP Ã© responsÃ¡vel por receber todos os parametros de coluna do ALV.
           COLUMN  TYPE REF TO CL_SALV_COLUMN.
 
     COLUMNS = SALV_ALV->GET_COLUMNS( ). "Manipula todas as colunas
@@ -92,14 +92,14 @@ CLASS REPORT_VIEW IMPLEMENTATION.
     COLUMN->SET_VISIBLE( ABAP_FALSE ). "Esconde a coluna mandt
 
     ME->SET_TEXT( EXPORTING NAME = 'NUMERO_PEDIDO'
-                          SHORT = 'Nº Pedido'
-                          LONG = 'Número Pedido'
+                          SHORT = 'NÂº Pedido'
+                          LONG = 'NÃºmero Pedido'
                           COLUMNS = COLUMNS ).
 
 *--------------------------------------------------------------------*
 **Exibe ao por o mouse em cima
 *    COLUMN = COLUMNS->GET_COLUMN( 'NUMERO PEDIDO' ).
-*    COLUMN->SET_SHORT_TEXT( 'Nº' ).
+*    COLUMN->SET_SHORT_TEXT( 'NÂº' ).
 *
 *    COLUMN = COLUMNS->GET_COLUMN( 'NUMERO PEDIDO' ).
 *    COLUMN->SET_LONG_TEXT( 'Numero Pedido' ).
