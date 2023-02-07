@@ -1,1 +1,1 @@
-### Atividades de aprendizado sap-abap;
+### Atividades de aprendizado sap-abap
