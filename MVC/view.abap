@@ -14,8 +14,8 @@ CLASS REPORT_VIEW DEFINITION.
 ENDCLASS.
 
 CLASS REPORT_VIEW IMPLEMENTATION.
-  "Qualquer validaÁ„o a ser feita na inicializaÁ„o do programa deve ser feita aqui.
-  "ValidaÁıes de usu·rios, permissıes..
+  "Qualquer valida√ß√£o a ser feita na inicializa√ß√£o do programa deve ser feita aqui.
+  "Valida√ß√µes de usu√°rios, permiss√µes..
   METHOD INITIALIZATION.
     MESSAGE 'Initialization Executada!' TYPE 'I'.
   ENDMETHOD.
